@@ -1,0 +1,22 @@
+import pandas as pd
+import os
+
+
+location = r"C:\Users\boyan.markov\Desktop\data" # enter the full folder location
+
+excel_list = []
+
+for file in os.listdir(location):
+    if file.endswith(".xlsx"):
+       fullpath = location + "\\" + file
+       dataframe = pd.read_excel(fullpath)
+       excel_list.append(dataframe)
+
+join = pd.concat(excel_list)
+
+
+filename = "Merged_File" # name your file
+
+fullfile = r"C:\Users\boyan.markov\Desktop" + "\\" + filename + ".xlsx"
+
+join.to_excel(fullfile)
