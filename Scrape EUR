@@ -1,0 +1,31 @@
+from bs4 import BeautifulSoup
+from urllib.request import urlopen
+import os, shutil
+import csv
+import datetime as DT
+import pandas as pd
+
+today = DT.date.today()
+week_ago = today - DT.timedelta(days=8)
+s_month = DT.date.today().replace(day=1)
+
+Name = "Daily" + str(today).replace("-","") +r".csv"
+
+URL = "http://exchange.eu-west-1.elasticbeanstalk.com/"
+soup = BeautifulSoup(urlopen(URL), 'html.parser')
+
+table = soup.find('table')
+
+table_rows = table.find_all('tr')
+
+table =[]
+
+for tr in table_rows:
+    td = tr.find_all('td')
+    row = [i.text for i in td]
+    table.append(row)
+
+df = pd.DataFrame(table, columns=["Date", "USD", "GBP"])
+df = df.drop(df.index[0])
+
+df.to_csv(Name)
